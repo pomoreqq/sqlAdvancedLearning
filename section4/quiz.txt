@@ -1,0 +1,88 @@
+Dobrze, robimy **quiz aktywujący (25 pytań)** do tej pierwszej sekcji zaawansowanego kursu:
+**Multi-Table Queries** → JOINS (w tym self & cross), UNION vs UNION ALL
+
+---
+
+## 📋 Quiz – Sekcja: Multi-Table Queries (25 pytań otwartych)
+
+### 🔹 JOIN-y ogólne
+
+1. Co to znaczy "joinowanie tabeli"?
+lączenie horzyntalnie lub wertykalnie dwóch lub więcej tabel
+2. Czym się różni `INNER JOIN` od `LEFT JOIN`?
+inner join zwraca tylko rekordy które się matchuja w obu tabelach, a left join zwraca te które się matchuja w obu tabelach
+oraz zostawia z lewej strony te które nie maja matcha
+3. W jakim przypadku `LEFT JOIN` może zwrócić `NULL` po prawej stronie?
+no kiedy wartości kolumn na których jest join się nie matchuja 
+4. Kiedy `INNER JOIN` nie zwróci żadnego wiersza, mimo że obie tabele mają dane?
+kiedy zly warunek w on jest dany
+5. Której klauzuli **zawsze** potrzebujesz przy `JOIN`?
+ON
+6. Co się stanie, jeśli do `JOIN` nie dodasz warunku `ON`?
+wszystkie rowy będą probowaly się matchowac ze soba
+7. Czym różni się `LEFT JOIN` od `FULL OUTER JOIN`?
+tym ze left join zwraca jak nie matchuja się z kolumna z prawej, a full outer zwraca dosłownie wszystko czyli matchujace się, nie matchujace z lewej, nie matchujace z prawej
+8. Co to znaczy "Cartesian product" i kiedy on się pojawia?
+pojawia się przy self join oraz cross join, oznacza to matchowanie się wszystkich rowów obu tabel
+
+---
+
+### 🔹 JOIN-y złożone
+
+9. Jak wygląda składnia `JOIN` na wielu kolumnach?
+select p.first,p.second from table p
+	inner join table d
+	on d.first = p.first AND d.second = p.second
+10. Jak połączyć 3 tabele w jednym zapytaniu?
+select p.first from table p
+	inner join table d
+	on p.first = d.first
+	inner join table e
+	on p.first = e.first
+11. Co oznacza aliasowanie tabel i po co to się robi w `JOIN`?
+	oznacza to nadawanie nazw tabelom zazwyczaj litera od nazwy tabeli, robi się to dla czystości kodu
+12. Czy możesz zrobić `JOIN` na kolumnach o różnych nazwach? Jak?
+	no poprstou w jednej tabeli kolumna moze być xyz a w drugiej abc a mogą się matchowac xd
+
+---
+
+### 🔹 SELF JOIN
+
+13. Co to jest `SELF JOIN` i kiedy się go używa?
+self join to robienie joina na tej samej tabeli, używa się go np do relacji miedzy pracownikami, porównania cen w jeden tabeli
+14. Jakie są warunki konieczne, by `SELF JOIN` miał sens?
+dwie kolumny musza mieć jedna wspolna kolumnę?
+15. Dlaczego `SELF JOIN` musi używać aliasów?
+no bo jest robiony na tej samej tabeli, bez aliasow nie można zrobić self joina
+---
+
+### 🔹 CROSS JOIN
+
+16. Co robi `CROSS JOIN` i czym różni się od `INNER JOIN`?
+no cross join jest to matchowanie się wszystkich rowów ze soba, to jest kompletnie inny join niż innerjoin
+17. Ile wierszy zwróci `CROSS JOIN` dwóch tabel: A (5 wierszy) i B (3 wiersze)?
+15 wierszy zwroci
+18. Podaj praktyczny przykład użycia `CROSS JOIN`.
+te same przykłady co dalem do przykladow self join
+---
+
+### 🔹 UNION i UNION ALL
+
+19. Czym się różni `UNION` od `UNION ALL`?
+	union usuwa duplikaty a union all nie
+20. Kiedy `UNION` automatycznie usuwa dane?
+	no kiedy sa duplikaty
+21. Co się stanie, jeśli spróbujesz zrobić `UNION` tabel z różną liczbą kolumn?
+ nie uda się wtedy union będzie blad
+22. Czy `UNION ALL` sortuje wyniki?
+	tak
+23. Jakie warunki muszą spełniać kolumny przy `UNION`?
+muszi być wspólny typ danych i taka sama ilość kolumn
+24. Czy można robić `UNION` na zapytaniach z aliasami i filtrami `WHERE`?
+	można, ale nie wiem jak
+25. Dlaczego `UNION` może być wolniejszy niż `UNION ALL`?
+	no bo union all po prostu dokleja do siebie tabele, a union po doklejeniu sprawdza każdy row w poszukiwaniu duplikatow
+---
+
+Gotowe. Jak będziesz gotowy, wrzucaj swoje odpowiedzi i zrobimy korektę.
+Chcesz później też mini-zadania do tego?

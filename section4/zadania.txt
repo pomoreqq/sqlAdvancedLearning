@@ -1,0 +1,164 @@
+1. SELF JOIN – relacje przełożony-pracownik
+
+Masz tabelę employees:
+
+id | name     | manager_id
+--------------------------
+1  | Anna     | NULL
+2  | Bartek   | 1
+3  | Celina   | 1
+4  | Damian   | 2
+
+
+👉 Napisz zapytanie, które zwróci imię pracownika i imię jego przełożonego w formacie
+
+SELECT e.name AS employee, m.name AS manager 
+FROM employees e 
+INNER JOIN employees m 
+ON e.manager_id = m.id
+
+
+2. CROSS JOIN – generowanie wszystkich kombinacji
+
+Masz dwie tabele:
+
+colors
+-------
+red
+green
+blue
+
+sizes
+------
+S
+M
+L
+
+
+SELECT color, size
+FROM colors
+CROSS JOIN sizes;
+
+Masz dwie tabele:
+
+likes_2024
+------------
+user_id
+1
+2
+2
+3
+
+likes_2025
+------------
+user_id
+2
+3
+4
+
+
+👉 Napisz dwa zapytania:
+
+Które zwróci listę wszystkich user_id z obu tabel, z duplikatami
+
+Które zwróci unikalne user_id
+select user_id from likes_2024
+union
+select user_id from likes_2025
+
+select user_id from likes_2024
+union all
+select user_id from likes_2025
+
+
+👉 Napisz zapytanie, które zwróci:
+
+imię klienta
+
+numer zamówienia
+
+kwotę
+Tylko dla klientów z USA, których zamówienie było na więcej niż 100.
+select c.first_name,o.order_id,o.total from customers c
+inner join orders o on c.customer_id = o.customer_id
+where c.country = 'USA' AND total > 100
+
+👉 Napisz zapytanie, które zwróci:
+
+name (nazwa produktu)
+
+category
+
+stock_status:
+
+'In Stock' jeśli quantity ≥ 1
+
+'Out of Stock' jeśli quantity = 0
+
+'Not Tracked' jeśli brak wpisu w inventory (czyli NULL)
+
+SELECT p.name, p.category, 
+  CASE
+    WHEN i.quantity >= 1 THEN 'In stock'
+    WHEN i.quantity = 0 THEN 'Out of Stock'
+    ELSE 'Not Tracked'
+  END AS stock_status
+FROM products p
+LEFT JOIN inventory i
+  ON p.product_id = i.product_id
+ORDER BY p.category, p.name;
+			
+Zadanie: Pokaż pełną listę pracowników, czyli:
+
+jeśli ktoś był tylko w 2024 → pokaż go
+
+jeśli tylko w 2025 → też pokaż
+
+jeśli w obu → pokaż dane z obu lat
+
+✅ Wynik ma zawierać kolumny:
+
+employee_id
+
+name_2024
+
+name_2025
+
+📌 Zakładamy brak FULL OUTER JOIN w silniku — zrób to ręcznie przez UNION, LEFT i RIGHT JOIN jak trzeba.
+
+Wyświetl listę pracowników, którzy zarabiają więcej niż inni pracownicy.
+Wynik ma zawierać:
+
+e1.name – pracownik z wyższą pensją
+
+e2.name – pracownik z niższą pensją
+
+e1.salary, e2.salary
+
+select e1.name,e1.salary,e2.name,e2.salary,e1.salary - e2.salary as salary_diff from employees e1
+inner join employees e2
+on e1.employee_id <> e2.employee_id
+where e1.salary > e2.salary
+order by e1.salary - e2.salary desc
+
+👉 Napisz zapytanie, które zwróci:
+
+first_name
+
+country
+
+total_spent (czyli suma total z zamówień)
+
+📌 Uwzględnij tylko klientów, którzy zrobili więcej niż 3 zamówienia
+📌 Posortuj wynik malejąco po total_spent
+
+SELECT 
+  c.first_name, 
+  c.country, 
+  SUM(o.total) AS total_spent
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.first_name, c.country
+HAVING COUNT(*) > 3
+ORDER BY total_spent DESC;
+
