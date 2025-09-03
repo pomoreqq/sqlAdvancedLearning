@@ -162,3 +162,35 @@ GROUP BY c.customer_id, c.first_name, c.country
 HAVING COUNT(*) > 3
 ORDER BY total_spent DESC;
 
+SELECT 
+  r1.user_id AS user_1, 
+  r2.user_id AS user_2, 
+  r1.movie_id,
+  r1.rating AS rating_1,
+  r2.rating AS rating_2,
+  ABS(r1.rating - r2.rating) AS rating_diff
+FROM ratings r1
+JOIN ratings r2
+  ON r1.movie_id = r2.movie_id
+  AND r1.user_id < r2.user_id
+WHERE ABS(r1.rating - r2.rating) <= 1
+ORDER BY rating_diff DESC;
+
+select p1.product_name as product_1, p2.product_name as product_2, p1.price as price_1, p2.price as price_2
+p1.category, p1.price - p2.price as price_diff from products p1
+join products p2
+on p1.product_id < p2.product_id AND p1.category = p2.category
+WHERE ABS(p1.price - p2.price) <= 2
+order by price_diff desc 
+
+SELECT c.name, SUM(o.total) AS total_spent
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.name
+ORDER BY total_spent DESC
+LIMIT 1;
+
+select e.region, sum(amount) as total_sales, (select  avg(amount) from sales
+group by region) as avg_employee_sales
+from sales
+
