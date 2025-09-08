@@ -1,0 +1,84 @@
+📘 Składnia i działanie funkcji okna:
+
+Czym różni się RANK() od DENSE_RANK()?
+rank moze pomijac liczby jesli pare jest takich samych a dense rank tego nie robi
+Czym różni się RANK() od ROW_NUMBER()?
+no rank robi jakby rankig a row-number ilosc rowow w danym oknie
+Co robi NTILE(4)?
+dzieli dana kolumne na 4 rowne czesci
+Czym różni się PARTITION BY od GROUP BY?
+to I to grupuje dane ale partition by tworzy okno na podstawie danej kolumny a groupby tworzy jeden row grupy
+Jak działa ORDER BY wewnątrz OVER()?
+tak jak na zewnatrz
+Co się stanie, jeśli pominiesz ORDER BY w funkcji okna?
+nic sie nie stanie
+W jakiej kolejności wykonywane są funkcje okna?
+wpierw over() a potem funkcja okienkowa
+Jak LAG() i LEAD() traktują pierwszy i ostatni rekord?
+jako nulle
+Co zwraca FIRST_VALUE()?
+pierwsza wartosc w danym oknie
+Co zwraca LAST_VALUE() i kiedy jego wynik może być mylący?
+kiedy est pare takich samych wartosci?
+
+
+📗 Przypadki i logika:
+
+Kiedy OVER(PARTITION BY ...) jest bezużyteczne?
+kiedy juz pogrupujemy dane wczesniej, lub jesli teoretycznie okieno to jeden row. np id 
+Czy można użyć OVER() z COUNT()?
+chyba tak, ale nie wiem czemu
+Jak wyznaczyć średnią kroczącą?
+nie wiem?
+W czym ROWS BETWEEN jest lepsze od zwykłego ORDER BY?
+nie mialem tego, ale mysle ze dlatego ze mozemy wybrac dokladne rowy na ktorych robimy order by?
+Co robi ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW?
+bierze row pomiedzy poprzednim a aktualnym?
+Dlaczego AVG(...) OVER() nie daje tego samego co AVG() z GROUP BY?
+nie wiem
+Jak działa RANK() w przypadku remisu?
+jest ta sama liczba i pomija nastepna
+Czym skutkuje użycie PARTITION BY na unikalnej kolumnie?
+taka sama iloscia okienek
+Jak wyciągnąć "top N per group"?
+ntile(n) over(partition by xyz order by abc)
+Jak znaleźć różnicę wartości między kolejnymi rekordami w ramach jednej grupy?
+trzeba obliczyc dany rekord lub jesli jest to robimy lag na tej kolumnie i tworzymy nowa na podstawie lagu nastepnie odejmujemy 
+wartosci z lagu I z dengo rekordu
+
+
+📙 Analiza i diagnostyka:
+
+Co jest nie tak w zapytaniu:
+
+SELECT RANK() OVER(PARTITION BY customer_id), customer_id FROM orders;
+nie ma order by. w ten sposob jest to bezsensu zapytanie
+
+Co się stanie, jeśli użyjesz FIRST_VALUE() bez ORDER BY?
+randomowy rekord zostanie zwrocony
+Dlaczego LAST_VALUE() może zwracać nie ten rekord, który myślisz?
+bo zwraca ostatnia wartosc ogolnie a nie w okienku?
+Co zwróci LAG(..., 2)?
+zacznie zwracac poprzedni row od drugiego rowa?
+
+Co robi NTILE(100) na tabeli z 15 wierszami?
+hmm nie wiem
+
+📕 Myślenie analityczne:
+
+Jak znaleźć klientów, którzy zwiększali swoje wydatki miesiąc po miesiącu?
+with cte as ( select customerid,month,sum(amount) as total spend from customers
+group by customerid,month
+order by customerid,month)
+select customerid,month,totalspend,
+lag(totalspend) over(partition by customer_id) as priormonth,
+totalspend - lag(totalspend) over(partition by customer_id) as monthDiff
+
+Jak przypisać każdemu rekordowi wartość z poprzedniego miesiąca?
+no metoda lag poprostu.
+Jak sprawdzić, czy któryś klient miał 2 takie same płatności pod rząd?
+bym zrobil okienko na customer id I order by order id?
+Jak sprawdzić, czy któryś film był wypożyczany przez 3 różne osoby pod rząd?
+nie wiem
+Czy można użyć funkcji okna bez GROUP BY? Kiedy to ma sens?
+chyba chodzilo bez partition by a nie bez grup by?

@@ -82,7 +82,7 @@ where secondMost = 2;
 -- ASSIGNMENT 4: Lead & Lag
 
 -- View the columns of interest
-select customer_id,order_id,product_id,units from orders;
+select customer_id,order_id,units from orders;
 
 -- For each customer, return the total units within each order
 select customer_id,order_id,sum(units) as totalUnits from orders
@@ -90,67 +90,104 @@ group by customer_id,order_id
 order by customer_id;
 
 -- Add on the transaction id to keep track of the order of the orders
-select customer_id,order_id,min(transaction_id) as minTrans,sum(units) as totalUnits from orders
+select customer_id,order_id,min(transaction_id),sum(units) as totalUnits from orders
 group by customer_id,order_id
-order by customer_id;
+order by customer_id,transId;
 
 -- Turn the query into a CTE and view the columns of interest
-with t as (
-select customer_id,order_id,min(transaction_id) as minTrans,sum(units) as totalUnits from orders
+with t as ( 
+select customer_id,order_id,min(transaction_id) as transId,sum(units) as totalUnits from orders
 group by customer_id,order_id
-order by customer_id) 
-select * from t;
+order by customer_id,transId
+)
+select customer_id,order_id,transId,totalUnits from t;
+
 
 -- Create a prior units column
-with t as (
-select customer_id,order_id,min(transaction_id) as minTrans,sum(units) as totalUnits from orders
+with t as ( 
+select customer_id,order_id,min(transaction_id) as transId,sum(units) as totalUnits
+ from orders
 group by customer_id,order_id
-order by customer_id)
-select customer_id,order_id,totalUnits,
-	lag(totalUnits)over(partition by customer_id order by minTrans) as priorUnits
- from t;
+order by customer_id,transId
+)
+select customer_id,order_id,transId,totalUnits,
+lag(totalUnits) over(partition by customer_id) as priorUnits
+ from t
+  where customer_id = 11148;
 -- For each customer, find the change in units per order over time
-with t as (
-select customer_id,order_id,min(transaction_id) as minTrans,sum(units) as totalUnits from orders
+with t as ( 
+select customer_id,order_id,min(transaction_id) as transId,sum(units) as totalUnits
+ from orders
 group by customer_id,order_id
-order by customer_id)
-select customer_id,order_id,totalUnits,
-	lag(totalUnits)over(partition by customer_id order by minTrans) as priorUnits,
-    totalUnits - lag(totalUnits)over(partition by customer_id order by minTrans) as unitsDiff
- from t;
-
+order by customer_id,transId
+)
+select customer_id,order_id,transId,totalUnits,
+lag(totalUnits) over(partition by customer_id order by transId) as priorUnits,
+totalUnits - lag(totalUnits) over(partition by customer_id order by transId) as unitsDiff
+ from t
+ where customer_id = 11148;
 
 -- two cts
-with t as (
-			select customer_id,order_id,min(transaction_id) as minTrans,sum(units) as totalUnits from orders
-			group by customer_id,order_id
-			order by customer_id),
+with t as ( 
+select customer_id,order_id,min(transaction_id) as transId,sum(units) as totalUnits
+ from orders
+group by customer_id,order_id
+order by customer_id,transId
+),
 	c as (
-			select customer_id,order_id,totalUnits,
-			lag(totalUnits)over(partition by customer_id order by minTrans) as priorUnits
- from t
-    )
-   select customer_id,order_id,totalUnits,priorUnits, totalUnits- priorUnits as unitsDiff from c ;
+ select customer_id,order_id,transId,totalUnits,
+lag(totalUnits) over(partition by customer_id order by transId) as priorUnits
+from t
+)
+select customer_id,order_id,transId,totalUnits,priorUnits,totalUnits - priorUnits as unitsDiff from c
+where customer_id = 11148;
 -- ASSIGNMENT 5: NTILE
 
 -- Calculate the total amount spent by each customer
 
 
 -- View the data needed from the orders table
-
+select customer_id,product_id,units from orders;
 
 -- View the data needed from the products table
-
+select product_id,unit_price from products;
 
 -- Combine the two tables and view the columns of interest
-
+select o.customer_id,o.product_id,o.units, p.unit_price from orders o
+inner join products p
+on p.product_id = o.product_id;
         
 -- Calculate the total spending by each customer and sort the results from highest to lowest
-
+select o.customer_id,sum(o.units*p.unit_price) as totalSpend from orders o
+inner join products p
+on p.product_id = o.product_id
+group by customer_id
+order by totalSpend DESC;
 
 -- Turn the query into a CTE and apply the percentile calculation
+with cte as ( 
+select o.customer_id,sum(o.units*p.unit_price) as totalSpend from orders o
+inner join products p
+on p.product_id = o.product_id
+group by o.customer_id
+order by totalSpend DESC
+)
+select customer_id,totalSpend,
+ntile(100) over() as pct from cte;
+
 
 
 -- Return the top 1% of customers in terms of spending
+with cte as ( 
+select o.customer_id,sum(o.units*p.unit_price) as totalSpend from orders o
+inner join products p
+on p.product_id = o.product_id
+group by o.customer_id
+order by totalSpend DESC
+),
+ cte2 as(select customer_id,totalSpend,
+ntile(100) over(order by totalSpend desc) as pct from cte)
+select * from cte2
+where pct = 1;
 
 
