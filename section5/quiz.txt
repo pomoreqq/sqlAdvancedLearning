@@ -1,0 +1,180 @@
+1. Co to jest subquery?
+A. Funkcja do filtrowania NULL
+B. Zapytanie wewnątrz innego zapytania
+C. Inna nazwa dla CTE
+D. Zapytanie z JOIN
+
+
+2. Gdzie można użyć subquery?
+A. Tylko w WHERE
+B. W WHERE, FROM, SELECT, HAVING
+C. Tylko w FROM i JOIN
+D. Tylko w SELECT
+
+3. Co się stanie, jeśli subquery w WHERE z = zwróci więcej niż jeden wiersz?
+A. Zadziała poprawnie
+B. Zwróci NULL
+C. Błąd
+D. Zwróci pierwszy wiersz
+
+4. Co robi subquery w klauzuli FROM?
+A. Dodaje kolumny
+B. Tworzy tymczasową tabelę
+C. Dzieli kolumny
+D. Usuwa NULL-e
+
+5. Czym różni się IN od EXISTS?
+A. IN jest szybsze
+B. EXISTS porównuje wartości, IN sprawdza istnienie
+C. IN porównuje wartości, EXISTS sprawdza istnienie
+D. Nie różnią się
+
+6. Kiedy należy użyć ANY zamiast IN?
+A. Gdy porównujemy do dowolnego elementu z podzapytania
+B. Gdy subquery zwraca 1 wiersz
+C. Gdy IN nie działa
+D. Gdy używamy HAVING
+
+7. ALL w zapytaniu znaczy:
+A. Dla wszystkich wartości z subquery
+B. Dla jednej wartości
+C. Dla NULL
+D. Dla całej tabeli
+
+8. Kiedy subquery musi zwrócić dokładnie jedną wartość?
+A. Zawsze
+B. Gdy używasz operatorów porównania (=, <, >)
+C. Gdy używasz IN
+D. Gdy jest w FROM
+
+9. Co oznacza błąd „subquery returns more than 1 row”?
+A. Subquery zwróciło za mało danych
+B. Subquery zwróciło wiele kolumn
+C. Subquery dało więcej niż jeden wynik, ale użyto =
+D. Nie ma takiego błędu
+
+10. Alias przy subquery w FROM jest:
+A. Niepotrzebny
+B. Wymagany
+C. Zalecany, ale opcjonalny
+D. Dozwolony tylko w SELECT
+
+11. Czy subquery w SELECT może korzystać z danych z zewnętrznego zapytania?
+A. Tak, ale tylko przy JOIN
+B. Tak, to tzw. subquery skorelowane
+C. Nie, subquery w SELECT musi być niezależne
+D. Tylko w GROUP BY
+
+12. Co to jest korelowane subquery?
+A. Subquery z JOIN
+B. Subquery zależne od danych z zewnętrznego zapytania
+C. Subquery, które zawiera EXISTS
+D. Subquery w HAVING
+
+13. Gdzie najczęściej spotkasz korelowane subquery?
+A. W FROM
+B. W ORDER BY
+C. W WHERE lub SELECT
+D. W GROUP BY
+
+14. Dlaczego korelowane subquery może być wolniejsze?
+A. Wymaga więcej kolumn
+B. Wykonuje się raz na każdy wiersz z zapytania zewnętrznego
+C. Sortuje dane
+D. Nie używa aliasów
+
+15. Jak działa NOT EXISTS?
+A. Zwraca TRUE, jeśli subquery nie zwraca żadnych wyników
+B. Zwraca tylko NULL-e
+C. Ignoruje puste tabele
+D. Wybiera wartości niezerowe
+
+16. Co robi EXISTS (SELECT 1 FROM orders WHERE customer_id = c.id)?
+A. Sprawdza czy customer_id = 1
+B. Zwraca wszystkie zamówienia klienta
+C. Sprawdza, czy klient c.id ma przynajmniej jedno zamówienie
+D. Porównuje klienta z innym klientem
+
+17. SELECT name FROM employees WHERE dept_id = (SELECT dept_id FROM departments); — co jest nie tak?
+A. Nie da się użyć SELECT w WHERE
+B. Subquery zwraca za mało danych
+C. Subquery zwraca za dużo wierszy
+D. Wszystko OK
+
+18. Dlaczego EXISTS może być bardziej wydajne niż IN?
+A. EXISTS sortuje dane
+B. IN sprawdza każdą wartość, EXISTS przerywa po pierwszym dopasowaniu
+C. EXISTS działa tylko na liczbach
+D. IN wymaga unikalnych danych
+
+19. Kiedy subquery działa jak filtr?
+A. W FROM
+B. W WHERE
+C. W GROUP BY
+D. W ORDER BY
+
+20. Czy subquery może mieć ORDER BY?
+A. Tak, zawsze
+B. Tylko w IN
+C. Tak, ale tylko z LIMIT
+D. Nie, nigdy
+
+21. Co robi subquery w klauzuli HAVING?
+A. Tworzy alias dla grup
+B. Filtrowanie grup na podstawie wartości z subquery
+C. Zlicza ilość grup
+D. Sortuje grupy
+
+22. Kiedy najlepiej użyć subquery w FROM?
+A. Gdy chcesz porównać wiele kolumn naraz
+B. Gdy dane muszą być przetworzone (agregacja, alias) przed dalszą filtracją
+C. Gdy potrzebujesz tylko jednej wartości
+D. Gdy dane mają różne typy
+
+23. Jaka jest różnica między subquery a CTE?
+A. CTE działa tylko w WHERE, subquery wszędzie
+B. Subquery można aliasować, CTE nie
+C. CTE można łatwiej wielokrotnie użyć w jednym zapytaniu
+D. Nie ma różnicy
+
+24. Jak zaczyna się CTE?
+A. SELECT WITH
+B. WITH cte_name AS (...)
+C. CREATE VIEW
+D. FROM (SELECT ...)
+
+25. Kiedy użycie CTE jest bardziej czytelne niż subquery?
+A. Gdy używamy JOIN
+B. Gdy subquery jest krótkie
+C. Gdy mamy kilka warstw subquery lub potrzebujemy użyć go wielokrotnie
+D. Gdy nie ma agregatów
+
+26. Czy CTE może odnosić się do siebie samego (rekursja)?
+A. Tak, to jedna z jego zalet
+B. Tylko w MySQL
+C. Tylko w GROUP BY
+D. Nie, to nielegalne
+
+27. Co robi WITH totals AS (SELECT ... ) SELECT * FROM totals;?
+A. Tworzy tymczasową tabelę totals do użycia w głównym zapytaniu
+B. Tworzy stałą
+C. Zmienia kolumny
+D. Usuwa NULL-e
+
+28. CTE jest wykonywane:
+A. Po głównym zapytaniu
+B. Raz i może być użyte wielokrotnie
+C. Dla każdego wiersza osobno
+D. Równolegle z GROUP BY
+
+29. Czy można mieć więcej niż jedno CTE w jednym zapytaniu?
+A. Nie
+B. Tylko z aliasem
+C. Tak, rozdzielając przecinkami
+D. Tak, ale tylko z JOIN
+
+30. W jakiej kolejności wykonywane są elementy zapytania z CTE?
+A. Najpierw SELECT, potem WITH
+B. Najpierw WITH, potem reszta zapytania
+C. Jednocześnie
+D. Najpierw WHERE, potem WITH

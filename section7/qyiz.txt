@@ -1,0 +1,49 @@
+📋 Quiz: Functions by Data Type
+
+Numeric Functions
+
+Która funkcja zwróci największą liczbę całkowitą ≤ danej wartości?
+metoda floor
+Jakiej funkcji użyjesz, aby zaokrąglić liczbę 123.456 do dwóch miejsc po przecinku?
+round
+Jaka jest różnica między ROUND(15.75, 1) a TRUNCATE(15.75, 1) (lub odpowiednikiem w Twoim dialekcie SQL)?
+round zwroci 15.8 a truncate 15.7?
+Co zwraca ABS(-10)?
+zwroci 10
+Do czego służy MOD(a, b)?
+do sprawdzenia czy np liczba jest parzysta
+CAST & CONVERT
+6. Jaka jest różnica między CAST() a CONVERT()?
+zadna, to i to konwertuje typ danych
+7. Napisz przykład, jak zamienić datę na string.
+select cast(exampleDate as string)
+8. Napisz przykład, jak zamienić string '123' na integer.
+select cast('123' as int)
+DateTime Functions
+9. Co zwróci YEAR('2024-09-11')?
+2024
+10. Jak uzyskać numer miesiąca z kolumny rental_date?
+metoda month
+11. Co daje DATEDIFF('2025-01-01','2024-12-31')?
+zwraca roznice dni miedzy datami
+12. Jak wyciągnąć dzień tygodnia z daty (Monday itp.)?
+metoda dayofweek
+13. Jak zwrócić aktualną datę i godzinę w SQL?
+current_timestamp()
+String Functions
+14. Jak połączyć imię i nazwisko w jedną kolumnę?
+metoda concat
+15. Co zwraca LENGTH('Hello')?
+dlugosc stringa
+16. Co robi funkcja TRIM()?
+usuwa whitespaces z stringa
+17. Jak pobrać pierwsze 3 znaki ze stringa 'Database'?
+substring('datebase,1,3)
+18. Jak znaleźć pozycję pierwszej spacji w stringu 'SQL Functions'?
+instr('SQL Functions',' ')
+
+Pattern Matching
+19. Jakim operatorem sprawdzisz, czy w kolumnie title znajduje się słowo „Love”?
+operatorlem like '%Love%'
+20. Jak zapisać warunek, który wybiera wszystkie tytuły zaczynające się na literę „A”?
+where title like 'A%'
