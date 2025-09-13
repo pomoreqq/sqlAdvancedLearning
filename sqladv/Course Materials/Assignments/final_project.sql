@@ -1,9 +1,36 @@
+
+use finalproject;
 -- PART I: SCHOOL ANALYSIS
 -- 1. View the schools and school details tables
+select * from schools;
+select * from school_details;
 -- 2. In each decade, how many schools were there that produced players?
--- 3. What are the names of the top 5 schools that produced the most players?
--- 4. For each decade, what were the names of the top 3 schools that produced the most players?
+select count(distinct schoolID), floor(yearid/10)*10  as decade from schools
+group by decade;
 
+-- 3. What are the names of the top 5 schools that produced the most players?
+select sd.name_full,count(*) from school_details sd
+inner join schools s
+on s.schoolID = sd.schoolID
+group by sd.name_full
+order by count(*) DESC
+limit 5;
+-- 4. For each decade, what were the names of the top 3 schools that produced the most players?
+with cte as (
+select s.schoolID,sd.name_full,floor(yearid/10)*10 as decade,count(*) as playerCount from schools s
+inner join school_details sd
+on sd.schoolID = s.schoolID
+group by s.schoolID,floor(yearid/10)*10
+order by floor(yearid/10)*10 DESC
+),
+cte2 as(
+select decade,name_full,playerCount,
+dense_rank() over(partition by decade order by playerCount DESC ) as dsnrnk
+from cte
+)
+select * from cte2
+where dsnrnk <= 3
+order by decade DESC, playerCount DESC;
 -- PART II: SALARY ANALYSIS
 -- 1. View the salaries table
 -- 2. Return the top 20% of teams in terms of average annual spending
